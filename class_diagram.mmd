@@ -1,0 +1,74 @@
+
+classDiagram
+    class Patient {
+        +String patient_id
+        +String name
+        +String dob
+        +String address
+        +String phone
+    }
+    class Doctor {
+        +String doctor_id
+        +String name
+        +String specialization
+    }
+    class Appointment {
+        +String appointment_id
+        +String patient_id
+        +String doctor_id
+        +String date
+        +String time
+        +float consultation_fee
+    }
+    class Invoice {
+        +String invoice_id
+        +String patient_id
+        +String appointment_id
+        +float medication_cost
+        +float total_amount
+    }
+    class DatabaseHelper {
+        +add_patient(Patient p)
+        +get_patient(String id)
+        +add_doctor(Doctor d)
+        +get_doctor(String id)
+        +add_appointment(Appointment a)
+        +get_appointments_by_doctor(String id)
+        +add_invoice(Invoice i)
+        +calculate_billing_total(String appointment_id, float medication_cost)
+    }
+    class IHospitalView {
+        <<interface>>
+        +display_patient_details(Patient p)
+        +show_loading()
+        +hide_loading()
+        +show_error_message(String message)
+        +clear_input_fields()
+        +display_appointments(List appointments)
+        +get_patient_input()
+    }
+    class ConsoleView {
+        +display_patient_details(Patient p)
+        +show_loading()
+        +hide_loading()
+        +show_error_message(String message)
+        +clear_input_fields()
+        +display_appointments(List appointments)
+        +get_patient_input()
+    }
+    class HospitalPresenter {
+        -IHospitalView view
+        -DatabaseHelper db_helper
+        +on_save_patient_clicked()
+        +on_load_patient_details(String id)
+        +on_load_appointments(String doctor_id)
+        +on_calculate_billing_total()
+    }
+
+    HospitalPresenter --> IHospitalView : uses
+    HospitalPresenter --> DatabaseHelper : uses
+    ConsoleView ..|> IHospitalView : implements
+    DatabaseHelper ..> Patient : manages
+    DatabaseHelper ..> Doctor : manages
+    DatabaseHelper ..> Appointment : manages
+    DatabaseHelper ..> Invoice : manages
